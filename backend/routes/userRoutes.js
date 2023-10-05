@@ -16,7 +16,7 @@ router.post("/signup", signupUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/follow/:id", protectRoute, followUnFollowUser);
-router.post("/update/:id", protectRoute, updateUser);
+router.put("/update/:id", protectRoute, updateUser);
 
 //it is not good practice thats why we use controllers
 // router.get("/signup", (req, res) => {
