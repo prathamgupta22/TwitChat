@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
 import { useParams } from "react-router-dom";
 import UserPost from "../components/UserPost";
+import useShowToast from "../hooks/useShowToast";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
   const { username } = useParams();
+  const showToast = useShowToast();
 
   useEffect(() => {
     const getUser = async () => {
@@ -14,23 +16,28 @@ const UserPage = () => {
       try {
         const res = await fetch(`/api/users/profile/${username}`);
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         // setPosts(data);
+        if (data.error) {
+          showToast("Error", data.error, "error");
+          return;
+        }
+        setUser(data);
       } catch (error) {
-        // showToast("Error", error.message, "error");
+        showToast("Error", error, "error");
         // setPosts([]);
-        console.log(error);
+        // console.log(error);
       }
       // finally {
       //   setFetchingPosts(false);
       // }
     };
     getUser();
-  }, [username]);
-
+  }, [username, showToast]);
+  if (!user) return null;
   return (
     <>
-      <UserHeader />
+      <UserHeader user={user} />
       <UserPost
         likes={1200}
         replies={481}
