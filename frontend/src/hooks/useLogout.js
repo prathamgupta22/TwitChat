@@ -1,14 +1,12 @@
-import { Button } from "@chakra-ui/button";
-import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
-import useShowToast from "../hooks/useShowToast.js";
-import { FiLogOut } from "react-icons/fi";
+import { useSetRecoilState } from "recoil";
+import useShowToast from "./useShowToast";
 
-const LogoutButton = () => {
+const useLogout = () => {
   const setUser = useSetRecoilState(userAtom);
   const showToast = useShowToast();
 
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
       const res = await fetch("/api/users/logout", {
         method: "POST",
@@ -20,26 +18,17 @@ const LogoutButton = () => {
 
       if (data.error) {
         showToast("Error", data.error, "error");
-        // return;
+        return;
       }
+
       localStorage.removeItem("user-threads");
       setUser(null);
     } catch (error) {
       showToast("Error", error, "error");
-      // console.log(error);
     }
   };
-  return (
-    <Button
-      position={"fixed"}
-      top={"30px"}
-      right={"30px"}
-      size={"sm"}
-      onClick={handleLogout}
-    >
-      <FiLogOut size={20} />
-    </Button>
-  );
+
+  return logout;
 };
 
-export default LogoutButton;
+export default useLogout;

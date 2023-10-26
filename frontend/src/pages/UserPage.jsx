@@ -1,62 +1,61 @@
 import { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
 import { useParams } from "react-router-dom";
-import UserPost from "../components/UserPost";
 import useShowToast from "../hooks/useShowToast";
+import { Spinner, Flex } from "@chakra-ui/react";
+import Post from "../components/Post";
+import useGetUserProfile from "../hooks/useGetUserProfile";
+import { useRecoilState } from "recoil";
+import postsAtom from "../atoms/postsAtom";
 
 const UserPage = () => {
-  const [user, setUser] = useState(null);
+  const { user, loading } = useGetUserProfile();
   const { username } = useParams();
   const showToast = useShowToast();
+  // const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useRecoilState(postsAtom);
+  const [fetchingPosts, setFetchingPosts] = useState(true);
 
   useEffect(() => {
-    const getUser = async () => {
+    const getPosts = async () => {
       // if (!user) return;
-      // setFetchingPosts(true);
+      setFetchingPosts(true);
       try {
-        const res = await fetch(`/api/users/profile/${username}`);
+        const res = await fetch(`/api/posts/user/${username}`);
         const data = await res.json();
-        // console.log(data);
-        // setPosts(data);
-        if (data.error) {
-          showToast("Error", data.error, "error");
-          return;
-        }
-        setUser(data);
+        console.log(data);
+        setPosts(data);
       } catch (error) {
-        showToast("Error", error, "error");
-        // setPosts([]);
-        // console.log(error);
+        showToast("Error", error.message, "error");
+        setPosts([]);
+      } finally {
+        setFetchingPosts(false);
       }
-      // finally {
-      //   setFetchingPosts(false);
-      // }
     };
-    getUser();
-  }, [username, showToast]);
-  if (!user) return null;
+    getPosts();
+  }, [username, showToast, setPosts]);
+  console.log("post is here and it is recoil state ", posts);
+  if (!user && loading) {
+    return (
+      <Flex justifyContent={"center"}>
+        <Spinner size={"xl"} />
+      </Flex>
+    );
+  }
+  if (!user && !loading) return <h1>User not found</h1>;
   return (
     <>
       <UserHeader user={user} />
-      <UserPost
-        likes={1200}
-        replies={481}
-        postImg="/post1.png"
-        postTitle="lets start"
-      />
-      <UserPost
-        likes={451}
-        replies={12}
-        postImg="/post2.png"
-        postTitle="Nyc one"
-      />
-      <UserPost
-        likes={321}
-        replies={41}
-        postImg="/post3.png"
-        postTitle="spacce is great"
-      />
-      <UserPost likes={11} replies={81} postTitle="first" />
+      {!fetchingPosts && posts.length === 0 && <h1>User has not posts.</h1>}
+      {fetchingPosts && (
+        <Flex justifyContent={"center"} my={12}>
+          <Spinner size={"xl"} />
+        </Flex>
+      )}
+
+      {posts.map((post) => (
+        <Post key={post._id} post={post} postedBy={post.postedBy} />
+      ))}
     </>
   );
 };
