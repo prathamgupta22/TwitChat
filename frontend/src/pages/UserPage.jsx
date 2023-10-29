@@ -12,7 +12,6 @@ const UserPage = () => {
   const { user, loading } = useGetUserProfile();
   const { username } = useParams();
   const showToast = useShowToast();
-  // const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [fetchingPosts, setFetchingPosts] = useState(true);
 

@@ -32,27 +32,6 @@ export default function UpdateProfilePage() {
   const showToast = useShowToast();
 
   const { handleImageChange, imgUrl } = usePreviewImg();
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   // if (updating) return;
-  //   // setUpdating(true);
-  //   try {
-  //     const res = await fetch(`/api/users/update/${user._id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
-  //     });
-  //     const data = await res.json(); // updated user object
-  //     console.log(data);
-  //     catch (error) {
-  //     showToast("Error", error, "error");
-  //   }
-  //   // finally {
-  //   //   setUpdating(false);
-  //   // }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (updating) return;
