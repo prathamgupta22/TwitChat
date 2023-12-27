@@ -39,6 +39,7 @@ export default function LoginCard() {
         headers: {
           "Content-Type": "application/json",
         },
+        mode: "no-cors",
         body: JSON.stringify(inputs),
       });
       const data = await res.json();
