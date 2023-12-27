@@ -9,7 +9,7 @@ export default defineConfig({
     //get rid of cors error
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "https://twit-chat.vercel.app",
         changeOrigin: true,
         secure: false,
       },

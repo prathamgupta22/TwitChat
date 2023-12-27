@@ -15,7 +15,7 @@ const HomePage = () => {
       setLoading(true);
       setPosts([]);
       try {
-        const res = await fetch("/api/posts/feed");
+        const res = await fetch("https://twit-chat.vercel.app/api/posts/feed");
         const data = await res.json();
 
         if (data.error) {
