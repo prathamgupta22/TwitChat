@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
+import cors from "cors";
 
 dotenv.config();
 
@@ -23,10 +24,20 @@ cloudinary.config({
 app.use(express.json({ limit: "50mb" })); // to parse the json data in the req.body
 app.use(express.urlencoded({ extended: true })); // to parse from data in the req.body
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/", (req, res) => {
+  res.send("<h1>Server is Working</h1>");
+});
 
 app.listen(PORT, () =>
   console.log(`Server started at http://localhost:${PORT}`)
